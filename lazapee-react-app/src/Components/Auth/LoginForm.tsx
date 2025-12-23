@@ -1,10 +1,11 @@
 import { useState } from "react";
 import api from "../API/axios"; // path to your axios instance
-import {Link} from "react-router-dom"
+import {Link,useNavigate} from "react-router-dom"
 
 export default function LoginForm() {
   const [formData, setFormData] = useState({ username: "", password: "" });
   const [error, setError] = useState("");
+  const navigate = useNavigate();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { id, value } = e.target;
@@ -22,6 +23,8 @@ export default function LoginForm() {
 
       localStorage.setItem("jwt", token);
       console.log("Login successful");
+      navigate("/register");
+
     } catch (err) {
       setError("Invalid username or password");
       console.error("Login failed", err);
@@ -84,7 +87,7 @@ export default function LoginForm() {
               Login
             </button>
           </div>
-           <Link to="/register" >Don't have an account? Register here</Link>
+           <Link to="/register" className="!text-success">Don't have an account? Register here</Link>
         </form>
       </div>
     </div>

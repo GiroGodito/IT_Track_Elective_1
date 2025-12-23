@@ -138,7 +138,7 @@ export default function RegisterForm() {
               Register
             </button>
           </div>
-          <Link to="/login" >Already have an account? Sign in</Link>
+          <Link to="/login" className="!text-success">Already have an account? Sign in</Link>
         </form>
       </div>
     </div>
