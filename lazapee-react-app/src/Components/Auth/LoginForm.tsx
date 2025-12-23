@@ -1,5 +1,6 @@
 import { useState } from "react";
 import api from "../API/axios"; // path to your axios instance
+import {Link} from "react-router-dom"
 
 export default function LoginForm() {
   const [formData, setFormData] = useState({ username: "", password: "" });
@@ -78,11 +79,12 @@ export default function LoginForm() {
           <div className="form-control mt-6">
             <button
               type="submit"
-              className="btn btn-success w-full h-12 text-lg"
+              className="btn w-full h-12 text-lg text-black !bg-success"
             >
               Login
             </button>
           </div>
+           <Link to="/register" >Don't have an account? Register here</Link>
         </form>
       </div>
     </div>
