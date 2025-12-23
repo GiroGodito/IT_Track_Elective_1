@@ -1,6 +1,8 @@
 // src/Pages/ProductPage.tsx
 import { useEffect, useState } from "react";
 import api from "../API/axios";
+import { ShoppingCartIcon } from "@heroicons/react/24/outline";
+import {Link,useNavigate} from "react-router-dom";
 
 interface Product {
   productID: number;
@@ -44,6 +46,12 @@ export default function ProductPage() {
   }
 
   return (
+    <>
+    <div className="fixed top-0 left-0 w-screen h-20 m-0 z-50 !bg-error">
+        <div className="flex justify-start m-5">
+            <Link to="/"><ShoppingCartIcon className="h-10 w-10 bg-white border-radius" /></Link>
+        </div>
+    </div>
     <div className="flex justify-center p-6">
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-6xl w-full">
         {products.map((product) => (
@@ -71,8 +79,10 @@ export default function ProductPage() {
               </div>
             </div>
           </div>
+          
         ))}
       </div>
     </div>
+    </>
   );
 }
