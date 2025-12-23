@@ -47,7 +47,7 @@ export default function RegisterForm() {
   return (
     <div className="flex items-center justify-center">
       {/* Card container */}
-      <div className="card w-full max-w-md shadow-xl bg-base-100">
+      <div className="card w-full max-w-md shadow-xl bg-base-100 !border-1 !border-accent">
         <form className="card-body" onSubmit={handleSubmit}>
           <h2 className="text-center text-success text-3xl font-bold mb-6">
             Register
