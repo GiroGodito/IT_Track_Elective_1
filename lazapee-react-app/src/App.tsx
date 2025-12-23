@@ -14,8 +14,9 @@
 
 // export default App
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import LoginForm from "./Components/Auth/LoginForm";
-import RegisterForm from "./Components/Auth/RegisterForm";
+import LoginForm from "./Components/Pages/LoginForm";
+import RegisterForm from "./Components/Pages/RegisterForm";
+import ProductPage from "./Components/Pages/ProductPage";
 import './App.css'
 
 export default function App() {
@@ -24,8 +25,8 @@ export default function App() {
       <Routes>
         <Route path="/login" element={<LoginForm />} />
         <Route path="/register" element={<RegisterForm />} />
-        {/* optional default route */}
-        <Route path="/" element={<LoginForm />} />
+        <Route path="/productPage" element={<ProductPage/>}/>
+        <Route path="/" element={<ProductPage />} />
       </Routes>
     </Router>
   );
