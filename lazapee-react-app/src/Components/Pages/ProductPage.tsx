@@ -91,7 +91,7 @@ export default function ProductPage() {
         <div className="flex justify-between m-5">
             <p><strong>{userName !== "Guest" ? `${userName}` : "Guest"}</strong></p>
             <div className="flex">
-              <Link to="/"><ShoppingCartIcon className="h-10 w-10 text-white" /></Link>
+              <Link to="/login"><ShoppingCartIcon className="h-10 w-10 text-white" /></Link>
               {token && <ArrowRightEndOnRectangleIcon className="h-10 w-10 ml-3" onClick={LogOut}/>}
             </div>
         </div>
