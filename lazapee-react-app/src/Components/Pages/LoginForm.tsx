@@ -23,7 +23,7 @@ export default function LoginForm() {
 
       localStorage.setItem("jwt", token);
       console.log("Login successful");
-      navigate("/register");
+      navigate("/productPage");
 
     } catch (err) {
       setError("Invalid username or password");
@@ -88,6 +88,7 @@ export default function LoginForm() {
             </button>
           </div>
            <Link to="/register" className="!text-success">Don't have an account? Register here</Link>
+           <Link to="/productPage" className="!text-success">Continue with Guest account</Link>
         </form>
       </div>
     </div>
