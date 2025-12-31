@@ -35,6 +35,7 @@ export default function ProductPage() {
   const navigate = useNavigate();
   const token = localStorage.getItem("jwt");
   const [userName, setUsername] = useState("Guest");
+  const [cartItems, setCartItems] = useState<Product[]>([]);
 
   useEffect(() => {
     api
@@ -65,11 +66,11 @@ export default function ProductPage() {
     );
   }
 
-  const AddToCart = () => 
+  const AddToCart = (product: Product) => 
     {
         if(token)
         {
-          
+          setCartItems((prev) => [...prev, product]);
         }
         else
         {
@@ -118,7 +119,9 @@ export default function ProductPage() {
             <p><strong>{userName !== "Guest" ? `${userName}` : "Guest"}</strong></p>
             <div className="flex gap-5">
               {token && <PiPackage className="h-10 w-10 text-white" onClick={ViewOrders}/>}
-              {token && <ShoppingCartIcon className="h-10 w-10 text-white" onClick={ViewCart}/>}
+              <div className="relative">
+                 {token && <ShoppingCartIcon className="h-10 w-10 text-white" onClick={ViewCart}/>}<span className="absolute -top-1 -right-1 bg-secondary text-white text-xs font-bold rounded-full h-6 w-6 flex items-center justify-center">{cartItems.length}</span>
+              </div>
               {token && <ArrowRightEndOnRectangleIcon className="h-10 w-10 ml-3" onClick={LogOut}/>}
             </div>
         </div>
@@ -147,7 +150,7 @@ export default function ProductPage() {
               <p className="text-sm">{product.description}</p>
               <div className="card-actions flex mt-4 gap-2">
                 {/* <button className="btn !bg-secondary">View Details</button> */}
-                <button className="btn !bg-primary" onClick={AddToCart}>Add to Cart</button>
+                <button className="btn !bg-primary" onClick={() => AddToCart(product)}>Add to Cart</button>
               </div>
             </div>
           </div>
