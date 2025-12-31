@@ -17,6 +17,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import LoginForm from "./Components/Pages/LoginForm";
 import RegisterForm from "./Components/Pages/RegisterForm";
 import ProductPage from "./Components/Pages/ProductPage";
+import OrdersPage from "./Components/Pages/OrdersPage";
 import './App.css'
 
 export default function App() {
@@ -26,6 +27,7 @@ export default function App() {
         <Route path="/login" element={<LoginForm />} />
         <Route path="/register" element={<RegisterForm />} />
         <Route path="/productPage" element={<ProductPage/>}/>
+        <Route path="/orderHistory" element={<OrdersPage/>}/>
         <Route path="/" element={<ProductPage />} />
       </Routes>
     </Router>

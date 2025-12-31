@@ -1,10 +1,10 @@
 // src/Pages/ProductPage.tsx
 import { useEffect, useState } from "react";
 import api from "../API/axios";
-import { ShoppingCartIcon } from "@heroicons/react/24/outline";
-import { ArrowRightEndOnRectangleIcon } from "@heroicons/react/24/outline";
-import {Link,useNavigate} from "react-router-dom";
+import { ShoppingCartIcon, ArrowRightEndOnRectangleIcon } from "@heroicons/react/24/outline";
+import {useNavigate} from "react-router-dom";
 import {jwtDecode} from "jwt-decode";
+import { PiPackage } from "react-icons/pi";
 
 interface Product {
   productID: number;
@@ -69,7 +69,7 @@ export default function ProductPage() {
     {
         if(token)
         {
-
+           alert("I have a token");
         }
         else
         {
@@ -85,13 +85,39 @@ export default function ProductPage() {
        setUsername("Guest");
     }
   }
+
+  const ViewCart = () => 
+  {
+      if(token)
+      {
+        alert("I have a token");
+      }
+      else
+      {
+        navigate("/login")
+      }
+  }
+
+  const ViewOrders = () => 
+  {
+      if(token)
+      {
+        alert("I have a token");
+      }
+      else
+      {
+        navigate("/login")
+      }
+  }
+
   return (
     <>
     <div className="fixed top-0 left-0 w-screen h-20 m-0 z-50 !bg-primary">
         <div className="flex justify-between m-5">
             <p><strong>{userName !== "Guest" ? `${userName}` : "Guest"}</strong></p>
-            <div className="flex">
-              <Link to="/login"><ShoppingCartIcon className="h-10 w-10 text-white" /></Link>
+            <div className="flex gap-5">
+              {token && <PiPackage className="h-10 w-10 text-white" onClick={ViewOrders}/>}
+              {token && <ShoppingCartIcon className="h-10 w-10 text-white" onClick={ViewCart}/>}
               {token && <ArrowRightEndOnRectangleIcon className="h-10 w-10 ml-3" onClick={LogOut}/>}
             </div>
         </div>
