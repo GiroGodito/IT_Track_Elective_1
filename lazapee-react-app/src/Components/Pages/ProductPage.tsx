@@ -138,6 +138,7 @@ export default function ProductPage() {
             </figure>
             <div className="card-body items-center text-center">
               <h2 className="card-title">{product.name}</h2>
+              <p>Seller {product.sellerID}</p>
               <p className="text-gray-600">{product.brand}</p>
               <p className="text-success font-semibold">
                 ₱{product.price.toLocaleString()}
