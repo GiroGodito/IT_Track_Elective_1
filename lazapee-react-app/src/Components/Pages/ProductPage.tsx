@@ -1,5 +1,5 @@
 // src/Pages/ProductPage.tsx
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import api from "../API/axios";
 import { ShoppingCartIcon, ArrowRightEndOnRectangleIcon } from "@heroicons/react/24/outline";
 import {useNavigate} from "react-router-dom";
@@ -69,7 +69,7 @@ export default function ProductPage() {
     {
         if(token)
         {
-           alert("I have a token");
+          
         }
         else
         {
@@ -103,6 +103,7 @@ export default function ProductPage() {
       if(token)
       {
         alert("I have a token");
+        navigate("/orderHistory");
       }
       else
       {
@@ -145,7 +146,7 @@ export default function ProductPage() {
               </p>
               <p className="text-sm">{product.description}</p>
               <div className="card-actions flex mt-4 gap-2">
-                <button className="btn !bg-secondary">View Details</button>
+                {/* <button className="btn !bg-secondary">View Details</button> */}
                 <button className="btn !bg-primary" onClick={AddToCart}>Add to Cart</button>
               </div>
             </div>
