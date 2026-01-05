@@ -279,16 +279,18 @@ const isLoggedIn = !!user;
   };
 
 
- const LogOut = async () => {
-  if (window.confirm("Log out now?")) {
-    try {
-      await api.post("/Auth/logout");   
-      setUser(null);                               
-    } catch (error) {
-      console.error("Logout failed:", error);
-    }
+const LogOut = async () => {
+  try
+  {
+    await api.post("/Auth/logout");
+    setUser(null);
+  }
+  catch(err)
+  {
+    console.error("Logout failed", err);
   }
 };
+
 
 
   const ViewCart = () => {
