@@ -223,14 +223,21 @@ export default function ProductPage() {
   const [loading, setLoading] = useState(true);
   const [user, setUser] = useState<WhoAmIResponse | null>(null);
 
- useEffect(() => { 
-  api.get<WhoAmIResponse>("/auth/whoAmI")
-  .then(res => setUser(res.data))
-  .catch(() => setUser(null));
- }, []);
+const fetchUser = async () => {
+  try { 
+    const res = await api.get<WhoAmIResponse>("/Auth/whoAmI");
+    setUser(res.data); 
+  } 
+  catch { 
+    setUser(null);
+   } 
+  };
+  
+  useEffect(() => { 
+    fetchUser(); 
+  }, []);
 
   const navigate = useNavigate();
-  const token = localStorage.getItem("jwt");
 
   // Fetch products
   useEffect(() => {
@@ -245,12 +252,6 @@ export default function ProductPage() {
         setLoading(false);
       });
   }, []);
-
-  useEffect(() => {
-     api.get("/auth/whoAmI") 
-     .then(res => setUser(res.data)) 
-     .catch(err => console.error("Not authorized", err));
-   }, []);
 
 const isLoggedIn = !!user;
 
@@ -271,19 +272,25 @@ const isLoggedIn = !!user;
   }
 
   const AddToCart = (sellerID: number) =>{
-    
-  };
-
-
-  const LogOut = () => {
-    if (window.confirm("Log out now?")) {
-      api.post("auth/logout")
-      .then(() => {
-        setUser(null);
-        navigate("/login");
-      })
+    if(!isLoggedIn)
+    {
+      navigate("/login");
     }
   };
+
+
+ const LogOut = async () => {
+  if (window.confirm("Log out now?")) {
+    try {
+      await api.post("/Auth/logout");   
+      setUser(null);                    
+      navigate("/login");             
+    } catch (error) {
+      console.error("Logout failed:", error);
+    }
+  }
+};
+
 
   const ViewCart = () => {
     
