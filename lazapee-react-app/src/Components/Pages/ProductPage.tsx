@@ -283,8 +283,7 @@ const isLoggedIn = !!user;
   if (window.confirm("Log out now?")) {
     try {
       await api.post("/Auth/logout");   
-      setUser(null);                    
-      navigate("/login");             
+      setUser(null);                               
     } catch (error) {
       console.error("Logout failed:", error);
     }
@@ -306,7 +305,7 @@ const isLoggedIn = !!user;
       <div className="fixed top-0 left-0 w-screen h-20 m-0 z-50 !bg-primary">
         <div className="flex justify-between m-5">
           <p>
-            <strong>{user?.username ?? "Guest"}</strong>
+            <strong>{user ? user.username : "Guest"}</strong>
           </p>
           <div className="flex gap-5">
             {isLoggedIn && (
