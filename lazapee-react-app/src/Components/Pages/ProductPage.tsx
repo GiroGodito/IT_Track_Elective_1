@@ -169,7 +169,6 @@ import {
   ArrowRightEndOnRectangleIcon,
 } from "@heroicons/react/24/outline";
 import { useNavigate } from "react-router-dom";
-import { jwtDecode } from "jwt-decode";
 import { PiPackage } from "react-icons/pi";
 
 interface Product {
@@ -188,11 +187,11 @@ interface Product {
   length: number;
 }
 
-interface JWTPayload {
-  sub?: string;
-  unique_name?: string;
-  role?: string;
-}
+// interface JWTPayload {
+//   sub?: string;
+//   unique_name?: string;
+//   role?: string;
+// }
 
 // interface Cart {
 //   cartID: number;
@@ -218,10 +217,37 @@ interface WhoAmIResponse
   roles: string[]
 }
 
+interface CartResponse
+{
+  success: boolean,
+  message: string,
+  data: number
+}
+
+interface CartItemResponse{
+  success: boolean,
+  message: string,
+  data: number
+}
+
+interface CartItem{
+  cartItemID: number;
+  cartID: number;
+  productID: number;
+  quantity: number;
+}
+
+
+
 export default function ProductPage() {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   const [user, setUser] = useState<WhoAmIResponse | null>(null);
+  const [cartSellerArray, setCartSellerArray] = useState<number[]>([]);
+  const [quantities, setQuantities] = useState<{ [key: number]: number }>({});
+  const [cartItemID, setCartItemID] = useState<number>(0);
+  const [cartID, setCartID] = useState<number>(0);
+  const [totalQuantity, setTotalQuantity] = useState<number>(0);
 
 const fetchUser = async () => {
   try { 
@@ -253,6 +279,11 @@ const fetchUser = async () => {
       });
   }, []);
 
+  // useEffect(() => {
+  //  const sum = Object.values(quantities).reduce((acc, qty) => acc + qty, 0);
+  //   setTotalQuantity(sum);
+  // }, [quantities]);
+
 const isLoggedIn = !!user;
 
   // // Decode JWT for username
@@ -271,10 +302,93 @@ const isLoggedIn = !!user;
     );
   }
 
-  const AddToCart = (sellerID: number) =>{
+  const handleQuantityChange = (productID: number, value: number) =>
+     {
+       setQuantities((prev) => (
+        { ...prev, [productID]: value }
+      ));
+  };
+
+  // const AddCartItem = async (cartID: number | null, productID: number) => {
+  //   await api.post("/CartItem/cartItem", {
+  //     cartID: cartID,
+  //     productID: productID,
+  //     quantity: 1
+  //   })
+  //   .then((cartItemResponse) => {
+  //     const apiResponse: CartItemResponse = cartItemResponse.data;
+  //     alert(`Successfully added to cart item with id of ${apiResponse.data}`);
+  //   })
+  //   .catch((error) => console.error("Error adding cart item:", error));
+  // };
+
+  const AddToCart = async (sellerID: number, productID: number, quantity: number) =>{
     if(!isLoggedIn)
     {
       navigate("/login");
+    }
+    else
+    {
+      if(cartSellerArray.includes(sellerID))
+      {
+        alert(`Cart with sellerID ${sellerID} already exists in cartSellerArray.`);
+        await api.put(`/CartItem/cartItem/cartItemID/${cartItemID}`,{
+          cartItemID: cartItemID,
+          cartID: cartID,
+          productID: productID,
+          quantity: quantity
+        }).then((cartItemResponse) => {
+          const apiResponse: CartItemResponse = cartItemResponse.data;
+          setTotalQuantity(quantity);
+          alert(`Successfully updated cart item with id of ${apiResponse.data}`);
+        }).catch((error) => console.error("Error updating cart item:", error));
+      }
+      else{
+        await api.post("/Cart/cart", {sellerID})
+        .then((cartResponse) => {
+          const apiResponse: CartResponse = cartResponse.data;
+          setCartSellerArray((prev) => [...prev, sellerID]);
+          setCartID(apiResponse.data);
+          setTotalQuantity(quantity);
+          alert(`Successfully created cart with id of ${apiResponse.data}`);
+
+          api.post("CartItem/cartItem",{
+            cartID: apiResponse.data,
+            productID: productID,
+            quantity: quantity
+          })
+          .then((cartItemResponse) => {
+            const apiResponse: CartItemResponse = cartItemResponse.data;
+            alert(`Successfully added to cart item with id of ${apiResponse.data}`);
+            setCartItemID(apiResponse.data);
+          })
+        }).catch((error) => console.error("Error adding to cart:", error));
+      }
+
+      // await api.post("/Cart/cart", { sellerID, productID })
+      // .then((cartResponse) => {
+      //   const apiResponse: CartResponse = cartResponse.data;
+      //   if(!cart.includes(apiResponse.data))
+      //   {
+      //     setCart((prev) => [...prev, apiResponse.data]);
+      //     alert(`Successfully created cart with id of ${apiResponse.data}`);
+      //     api.post("CartItem/cartItem",{
+      //       cartID: apiResponse.data,
+      //       productID: productID,
+      //       quantity: 1
+      //     })
+      //     .then((cartItemResponse) => {
+      //       const apiResponse: CartItemResponse = cartItemResponse.data;
+      //       alert(apiResponse.data);
+      //     })
+      //   }
+      //   else{
+      //     alert("testing");
+      //     console.log('testing');
+      //   }
+      // })
+      // .catch((error) => console.error("Error adding to cart:", error));
+      
     }
   };
 
@@ -304,7 +418,7 @@ const LogOut = async () => {
   return (
     <>
       {/* Top bar */}
-      <div className="fixed top-0 left-0 w-screen h-20 m-0 z-50 !bg-primary">
+      <div className="fixed top-0 left-0 w-screen h-20 m-0 z-50 bg-primary!">
         <div className="flex justify-between m-5">
           <p>
             <strong>{user ? user.username : "Guest"}</strong>
@@ -322,7 +436,7 @@ const LogOut = async () => {
               )}
               {isLoggedIn && (
                 <span className="absolute -top-1 -right-1 bg-secondary text-white text-xs font-bold rounded-full h-6 w-6 flex items-center justify-center">
-                  0
+                  {totalQuantity}
                 </span>
               )}
             </div>
@@ -361,12 +475,13 @@ const LogOut = async () => {
                 <p className="text-sm">{product.description}</p>
                 <div className="card-actions flex mt-4 gap-2">
                   <button
-                    className="btn !bg-primary"
-                    onClick={() => AddToCart(product.sellerID)}
+                    className="btn bg-primary!"
+                    onClick={() => isLoggedIn ? AddToCart(product.sellerID,product.productID,quantities[product.productID] || 1) : navigate("/login")}
                   >
-                    Add to Cart
+                  Add To Cart
                   </button>
-                </div>
+                  <input type="number" min="1" className="input input-bordered w-20" value={quantities[product.productID] || 1} onChange={(e) => handleQuantityChange(product.productID, parseInt(e.target.value))}/>
+                  </div>
               </div>
             </div>
           ))}
