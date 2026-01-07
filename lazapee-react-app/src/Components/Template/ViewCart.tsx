@@ -9,6 +9,7 @@ interface CartItemDTO {
   name: string;
   price: number;
   quantity: number;
+  imageUrl: string;
 }
 
 interface CartDTO {
@@ -146,7 +147,7 @@ const handleDeleteCart = async (cartID: number) => {
             className="border rounded-lg p-6 shadow-md bg-gray-800 text-gray-100 border-white!"
           >
             <h3 className="text-xl font-semibold mb-4">
-              <span className="text-secondary-content">{cart.storeName}</span>
+              <span className="text-accent!">{cart.storeName} Store</span>
             </h3>
 
             {/* Table */}
@@ -154,7 +155,8 @@ const handleDeleteCart = async (cartID: number) => {
               <table className="min-w-full border border-gray-700 rounded-lg">
                 <thead className="bg-gray-700 text-gray-200">
                   <tr>
-                    <th className="px-4 py-2 text-center">Item</th>
+                    <th className="px-4 py-2 text-center">Image</th>
+                    <th className="px-4 py-2 text-center">Name</th>
                     <th className="px-4 py-2 text-center">Quantity</th>
                     <th className="px-4 py-2 text-center">Unit Price</th>
                     <th className="px-4 py-2 text-center">Line Total</th>
@@ -167,6 +169,9 @@ const handleDeleteCart = async (cartID: number) => {
                       key={item.cartItemID}
                       className="border-t border-gray-700 transition"
                     >
+                        <td className="px-4 py-2 text-center">
+                          <img src={item.imageUrl} className="w-16 h-16 object-cover mx-auto" />
+                        </td>
                       <td className="px-4 py-2">{item.name}</td>
                       <td className="px-4 py-2 text-center">{item.quantity}</td>
                       <td className="px-4 py-2 text-center">₱{item.price}</td>
@@ -187,17 +192,17 @@ const handleDeleteCart = async (cartID: number) => {
             </div>
 
             {/* 👉 Checkout button shows per-cart total */}
-            <button className="w-full mt-6 bg-primary! text-white py-2 px-4 rounded transition">
-              Checkout{" "}
+            <button className="w-full mt-6 bg-primary! text-white py-2 px-4 rounded transition d-flex space-around">
+              Proceed to Checkout{" "}
               <span className="p-1 bg-primary-content text-primary! rounded">
-                <strong>(₱{cartTotal})</strong>
+                <strong>₱{cartTotal}</strong>
               </span>
             </button>
           </div>
         );
       })}
     </div>
-    <div className="flex justify-center mt-6 gap-2"> 
+    {carts.length > 0 ? (<div className="flex justify-center mt-6 gap-2"> 
         <button className="btn" disabled={currentPage === 1}
          onClick={() => setCurrentPage(prev => prev - 1)} > 
          Prev 
@@ -206,7 +211,7 @@ const handleDeleteCart = async (cartID: number) => {
           Page {currentPage} of {totalPages}
           </span>
           <button className="btn" disabled={currentPage === totalPages} onClick={() => setCurrentPage(prev => prev + 1)} > Next </button>
-      </div>
+      </div>) : (<p className="text-center">Your cart is currently empty</p>)} 
       </>
   );
 }

@@ -1492,6 +1492,7 @@ interface Product {
   sellerID: number;
   categoryID: number;
   name: string;
+  storeName: string;
   price: number;
   isActive: boolean;
   brand: string;
@@ -1818,7 +1819,9 @@ const hydrateCartState = async () => {
               </figure>
               <div className="card-body items-center text-center">
                 <h2 className="card-title">{product.name}</h2>
-                <p>Seller {product.sellerID}</p>
+                <strong>
+                  <p className="text-accent!">{product.storeName} Store</p>
+                </strong>
                 <p className="text-gray-600">{product.brand}</p>
                 <p className="text-success font-semibold">
                   ₱{product.price.toLocaleString()}
@@ -1863,7 +1866,7 @@ const hydrateCartState = async () => {
           ))}
         </div>
       </div>
-      <div className="flex justify-center mt-6 gap-2"> 
+      {products.length > 0 && (<div className="flex justify-center mt-6 gap-2"> 
         <button className="btn" disabled={currentPage === 1}
          onClick={() => setCurrentPage(prev => prev - 1)} > 
          Prev 
@@ -1872,7 +1875,7 @@ const hydrateCartState = async () => {
           Page {currentPage} of {totalPages}
           </span>
           <button className="btn" disabled={currentPage === totalPages} onClick={() => setCurrentPage(prev => prev + 1)} > Next </button>
-      </div>
+      </div>)}
       {/* ✅ Cart Dialog */}
       {showCart && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
