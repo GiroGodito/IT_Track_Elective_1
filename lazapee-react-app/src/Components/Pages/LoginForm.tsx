@@ -116,10 +116,10 @@ export default function LoginForm() {
       const { username, password } = formData;
 
       // Login request — backend should set HttpOnly cookie
-      await api.post("/Auth/login", { username, password }, { withCredentials: true });
+      await api.post("/Auth/login", { username, password });
 
       // Immediately fetch user info to update UI
-      const whoAmI = await api.get("/Auth/whoAmI", { withCredentials: true });
+      const whoAmI = await api.get("/Auth/whoAmI");
       console.log("Logged in as:", whoAmI.data.username);
 
       // Navigate to product page

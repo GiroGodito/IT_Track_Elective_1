@@ -28,7 +28,7 @@ export default function App() {
         <Route path="/register" element={<RegisterForm />} />
         <Route path="/productPage" element={<ProductPage/>}/>
         <Route path="/orderHistory" element={<OrdersPage/>}/>
-        <Route path="/" element={<ProductPage />} />
+        <Route path="/" element={<LoginForm />} />
       </Routes>
     </Router>
   );
