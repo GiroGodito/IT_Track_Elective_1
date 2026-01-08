@@ -46,6 +46,7 @@ export default function CheckOutForm({ refreshCarts }: CheckOutFormProps) {
 
   const [cart, setCart] = useState<CartDTO | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
 
   const [address, setAddress] = useState<ShippingAddress>({
@@ -70,6 +71,7 @@ export default function CheckOutForm({ refreshCarts }: CheckOutFormProps) {
       .get<ApiResponseCart>(`/Cart/CartByCartIDLoggedinUser/${numericCartID}`)
       .then((res) => {
         setCart(res.data.data);
+        setSuccess("✅ Order has been placed successfully!");
         setLoading(false);
       })
       .catch((err) => {
@@ -109,7 +111,7 @@ const handleSubmit = async (e: React.FormEvent) => {
     };
 
     const res = await api.post("/Order/OrderCart", orderPayload);
-    console.log("Order placed:", res.data);
+    console.log("Order placed:", res.data.message);
 
     // 2. Refresh carts after successful order
     const data = await refreshCarts();
@@ -259,7 +261,7 @@ const handleSubmit = async (e: React.FormEvent) => {
               type="submit"
               className="w-full mt-6 bg-primary! text-white py-2 px-4 rounded transition"
             >
-              Place Order
+              {success ? success : "Place Order"}
             </button>
           </form>
         </div>
