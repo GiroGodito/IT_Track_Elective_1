@@ -18,6 +18,7 @@ import LoginForm from "./Components/Pages/LoginForm";
 import RegisterForm from "./Components/Pages/RegisterForm";
 import ProductPage from "./Components/Pages/ProductPage";
 import OrdersPage from "./Components/Pages/OrdersPage";
+import CheckOutForm from "./Components/Pages/CheckOutForm";
 import './App.css'
 
 export default function App() {
@@ -28,6 +29,7 @@ export default function App() {
         <Route path="/register" element={<RegisterForm />} />
         <Route path="/productPage" element={<ProductPage/>}/>
         <Route path="/orderHistory" element={<OrdersPage/>}/>
+         <Route path="/checkout/:cartID" element={<CheckOutForm />} />
         <Route path="/" element={<ProductPage />} />
       </Routes>
     </Router>

@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import api from "../API/axios"; 
 import { TrashIcon } from "@heroicons/react/24/outline";
+import { useNavigate } from "react-router-dom";
 
 // DTOs
 interface CartItemDTO {
@@ -46,6 +47,7 @@ export function ViewCart({onCartChanged}:ViewCartProps) {
   const [totalCount, setTotalCount] = useState<number>(0);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [pageSize] = useState<number>(2); // show 2 carts per page
+  const navigate = useNavigate();
 
   useEffect(() => {
     api.get<ApiResponseUserCart>(`/Cart/ViewCart?currentPage=${currentPage}&pageSize=${pageSize}`)
@@ -95,10 +97,7 @@ const handleDeleteItem = async (cartItemID: number, cartID: number) => {
     } else {
       // Otherwise just refresh carts to reflect updated items
       await refreshCarts();
-    }
-
-    if (onCartChanged) {
-        onCartChanged(); 
+      if (onCartChanged) { onCartChanged();} 
     }
   } catch (err) {
     console.error("Error deleting cart item:", err);
@@ -192,7 +191,7 @@ const handleDeleteCart = async (cartID: number) => {
             </div>
 
             {/* 👉 Checkout button shows per-cart total */}
-            <button className="w-full mt-6 bg-primary! text-white py-2 px-4 rounded transition d-flex space-around">
+            <button onClick={() => navigate(`/checkout/${cart.cartID}`)}className="w-full mt-6 bg-primary! text-white py-2 px-4 rounded transition d-flex space-around">
               Proceed to Checkout{" "}
               <span className="p-1 bg-primary-content text-primary! rounded">
                 <strong>₱{cartTotal}</strong>
