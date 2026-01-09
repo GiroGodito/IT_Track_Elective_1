@@ -64,7 +64,7 @@ export default function App() {
           path="/checkout/:cartID"
           element={<CheckOutForm refreshCarts={refreshCarts} />}
         />
-        <Route path="/" element={<ProductPage />} />
+        <Route path="/" element={<LoginForm />} />
       </Routes>
     </Router>
   );
