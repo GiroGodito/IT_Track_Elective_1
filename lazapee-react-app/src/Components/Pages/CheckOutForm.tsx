@@ -277,6 +277,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { cartService } from "../../Services/CartService";
 import { orderService } from "../../Services/OrderService";
+import {useNavigate} from "react-router-dom"
 
 interface CartItemDTO {
     cartItemID: number;
@@ -310,6 +311,7 @@ interface CheckOutFormProps {
 }
 
 export default function CheckOutForm({ refreshCarts }: CheckOutFormProps) {
+    const navigate = useNavigate();
     const { cartID } = useParams<{ cartID: string }>();
     const numericCartID = Number(cartID);
 
@@ -351,7 +353,23 @@ export default function CheckOutForm({ refreshCarts }: CheckOutFormProps) {
     }, [numericCartID]);
 
     if (loading) return <p className="text-center">Loading cart...</p>;
-    if (error) return <p className="text-red-600 font-medium">{error}</p>;
+    // if (error) return <p className="text-red-600 font-medium">{error}</p>;
+    
+    if (error) {
+    return (
+        <div className="text-center">
+        <p className="text-red-600 font-medium mb-4">{error}</p>
+        <button
+            onClick={() => navigate("/productPage")}
+            className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+        >
+            Back to Product Page
+        </button>
+        </div>
+    );
+    }
+
+
     if (!cart) return <p className="text-center">No cart found</p>;
 
     const cartTotal = cart.items.reduce(

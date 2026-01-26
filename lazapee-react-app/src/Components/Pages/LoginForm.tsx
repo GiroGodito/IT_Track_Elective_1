@@ -224,8 +224,16 @@ export default function LoginForm() {
         try {
             await authService.login(formData);
             const whoAmI = await authService.whoAmI();
+              if(whoAmI.roles.includes("User") && whoAmI.roles.length == 1)
+              {
+                navigate("/productPage");
+              }
+              else if(whoAmI.roles.includes("Seller"))
+              {
+                navigate("/sellerDashboard");
+              }
             console.log("Logged in as:", whoAmI.username);
-            navigate("/productPage");
+            
         } catch {
             setError("Invalid username or password");
         }

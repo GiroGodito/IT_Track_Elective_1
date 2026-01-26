@@ -1920,6 +1920,7 @@ interface Product {
     categoryID: number;
     name: string;
     storeName: string;
+    quantityAvailable: number;
     price: number;
     isActive: boolean;
     brand: string;
@@ -2124,7 +2125,12 @@ export default function ProductPage() {
             {/* Top bar */}
             <div className="fixed top-0 left-0 w-screen h-20 m-0 z-50 bg-primary!">
                 <div className="flex justify-between m-5">
-                    <p>
+                    <p onClick={() => {
+                            if(!user)
+                            {
+                                navigate("/login");
+                            }
+                        }}>
                         <strong>{user ? user.username : "Guest"}</strong>
                     </p>
                     <div className="flex gap-5">
@@ -2162,13 +2168,28 @@ export default function ProductPage() {
                             key={product.productID}
                             className="card shadow-lg border rounded-lg bg-base-200"
                         >
-                            <figure>
-                                <img
-                                    src={product.imageUrl}
-                                    alt={product.name}
-                                    className="w-full h-48 object-cover"
-                                />
+                            <figure className="relative">
+                            <img
+                                src={product.imageUrl}
+                                alt={product.name}
+                                className={`w-full h-48 object-cover ${product.quantityAvailable <= 0 || product.quantityAvailable <= 5 ? "opacity-50" : ""}`}
+                            />
+
+                            {/* Out of Stock Badge */}
+                            {product.quantityAvailable <= 0 && (
+                                <span className="badge badge-secondary p-5 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 -rotate-15 opacity-70 text-white! border border-white!">
+                                <strong>⚠ Out Of Stock</strong>
+                                </span>
+                            )}
+
+                            {/* Low Stock Badge */}
+                            {product.quantityAvailable > 0 && product.quantityAvailable <= 5 && (
+                                <span className="badge badge-warning absolute top-2 left-2 text-black! border border-black!">
+                                <strong>Only {product.quantityAvailable} left</strong>
+                                </span>
+                            )}
                             </figure>
+
                             <div className="card-body items-center text-center">
                                 <h2 className="card-title">{product.name}</h2>
                                 <strong>
@@ -2184,12 +2205,13 @@ export default function ProductPage() {
                                         <button
                                             className="btn bg-primary!"
                                             onClick={() => navigate("/login")}
+                                            disabled={product.quantityAvailable <= 0}
                                         >
                                             Add To Cart
                                         </button>
                                     ) : !cartItemIDs[product.productID] ? (
                                         <button
-                                            className="btn bg-primary!"
+                                            className="btn bg-primary!" 
                                             onClick={() =>
                                                 AddToCart(
                                                     product.sellerID,
@@ -2197,8 +2219,9 @@ export default function ProductPage() {
                                                     quantities[product.productID] || 1
                                                 )
                                             }
+                                            disabled={product.quantityAvailable <= 0}
                                         >
-                                            Add To Cart
+                                           Add To Cart
                                         </button>
                                     ) : (
                                         <input

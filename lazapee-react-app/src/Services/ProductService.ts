@@ -6,6 +6,7 @@ export interface Product {
     categoryID: number;
     name: string;
     storeName: string;
+    quantityAvailable: number;
     price: number;
     isActive: boolean;
     brand: string;
@@ -31,6 +32,21 @@ export interface PaginatedProductResponse {
 export interface GetProductsParams {
     currentPage: number;
     pageSize: number;
+}
+
+export interface ProductPayload { 
+    sellerID: number; 
+    categoryID: number; 
+    name: string; 
+    price: number; 
+    brand: string;
+    description: string; 
+    imageUrl: string; 
+    weight: number; 
+    width: number; 
+    height: number; 
+    length: number; 
+    quantityAvailable: number;
 }
 
 // ============================================
@@ -61,6 +77,12 @@ export const productService = {
      */
     getProductById: async (productID: number): Promise<Product> => {
         const response = await api.get<Product>(`/Product/${productID}`);
+        return response.data;
+    },
+
+    //new method as of Jan 25, 2026 Sunday
+    createProduct: async (payload: ProductPayload): Promise<Product> => {
+        const response = await api.post<Product>("/Product", payload); 
         return response.data;
     },
 };
